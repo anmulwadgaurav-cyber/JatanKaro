@@ -1,0 +1,47 @@
+@import "tailwindcss";
+@font-face {
+  font-family: mainFont;
+  src: url(./assets/Geist-VariableFont_wght.ttf);
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background-color: #0f1115;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+@theme {
+  --color-primary: #bafe52; /* Your custom color value */
+  --color-secondary: #9fa4ab;
+  --color-background: #0f1115;
+  --color-foreground: #ebebeb;
+  --color-text: #f5f7fa;
+  --color-card: #1a1d22;
+  --color-shade: #29292a;
+  --color-customBlue: #007bff;
+  --color-customRed: #e53653;
+}
+
+/* .button{
+  background-color: #;
+} */
+
+#card {
+  overflow: hidden;
+}
+
+#links {
+  top: 0.5rem;
+  right: 0.5rem;
+  transition: all ease-in-out 0.2s;
+  opacity: 0;
+}
+
+#card:hover #links {
+  opacity: 100;
+}

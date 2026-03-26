@@ -1,0 +1,33 @@
+{
+  "name": "jatankaro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.1",
+    "got": "^14.6.6",
+    "ioredis": "^5.10.0",
+    "jsonwebtoken": "^9.0.3",
+    "metascraper": "^5.49.25",
+    "metascraper-description": "^5.49.25",
+    "metascraper-image": "^5.49.25",
+    "metascraper-title": "^5.49.25",
+    "mongoose": "^9.3.1",
+    "nodemailer": "^8.0.3",
+    "openai": "^6.33.0"
+  }
+}
