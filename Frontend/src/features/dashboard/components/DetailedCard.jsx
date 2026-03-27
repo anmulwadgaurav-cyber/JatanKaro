@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useItem } from "../hook/useItem";
 import { setDetailedDisplay } from "../../slices/display.slice";
 import { successMessageToast } from "../../slices/notification.slice";
+import { addParticularItem } from "../../slices/items.slice";
 
 const DetailedCard = () => {
   const params = useParams();
@@ -84,6 +85,14 @@ const DetailedCard = () => {
     handleGetItemById(itemId);
   }, [itemId]);
 
+  function relatedItemClickHandler(item) {
+    if (item._id === data._id) return;
+    setIsEditing(false);
+    dispatch(addParticularItem(item));
+    // handleGetItemById(item._id);
+    handleRealtedItemsById(item._id);
+  }
+
   return (
     <div
       className={
@@ -122,7 +131,7 @@ const DetailedCard = () => {
             <i className="ri-close-fill text-3xl"></i>
           </button>
         </div>
-        <div className="p-5  h-full flex">
+        <div className="p-5 w-full h-full flex">
           {data?.type === "image" ? (
             <img
               src={
@@ -145,7 +154,7 @@ const DetailedCard = () => {
               className="w-170 h-100 aspect-video rounded-tl-xl rounded-bl-xl"
             />
           )}
-          <div className="flex flex-col bg-background h-100 w-full rounded-tr-xl rounded-br-xl">
+          <div className="flex flex-col bg-background h-100 w-170 rounded-tr-xl rounded-br-xl">
             <div className="border-b border-shade p-5 h-30 flex items-center">
               {isEditing ? (
                 <textarea
@@ -250,21 +259,29 @@ const DetailedCard = () => {
           </div>
         </div>
         <div className=" p-5 h-full border-t border-shade flex gap-5">
-          {related.map((item) => {
+          {related?.map((item) => {
             return (
-              <div>
+              <Link
+                onClick={() => relatedItemClickHandler(item)}
+                to={`/card/detail/${itemId}`}
+                className="hover:scale-102 transition-all ease-in-out duration-200"
+              >
                 <img
                   className="w-55 h-35 object-cover rounded-xl"
                   src={
-                    item.thumbnail.includes("Image_not_available") ? item.url : item.thumbnail
+                    item.thumbnail.includes("Image_not_available")
+                      ? item.url
+                      : item.thumbnail
                   }
                   alt=""
                 />
                 <div className="w-50 text-[14px]">
                   <p>{item.title.slice(0, 40) + "..."}</p>
-                  <p className="text-secondary text-sm">{date}</p>
+                  <p className="text-secondary text-sm">
+                    {new Date(item.createdAt).toLocaleDateString("en-GB")}
+                  </p>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

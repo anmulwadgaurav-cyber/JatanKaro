@@ -27,7 +27,7 @@ const Create = () => {
           createDisplay
             ? !form
               ? "w-100 md:w-150 h-151 bg-card/95 border border-shade rounded-3xl relative"
-              : "w-100 md:w-150 h-70 bg-card/95 border border-shade rounded-3xl relative"
+              : "w-100 md:w-150 h-88 bg-card/95 border border-shade rounded-3xl relative"
             : "hidden"
         }
       >
