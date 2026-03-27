@@ -28,7 +28,16 @@ export async function getItems({ q, type, tag, page, limit } = {}) {
   const response = await api.get("/get-items", {
     params: { q, type, tag, page, limit },
   });
-  return response.data;
+  const semanticRes = await api.get("/semantic-search", {
+    params: { q, type, tag, page, limit },
+  });
+  return { ...response.data, ...semanticRes.data.results };
+}
+
+export async function getRelatedItemsController(id) {
+  const response = await api.get(`/related/${id}`);
+  // console.log(response.data.results)
+  return response.data.results;
 }
 
 export async function getItemById(id) {

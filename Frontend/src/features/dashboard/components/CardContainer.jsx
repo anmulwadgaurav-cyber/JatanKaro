@@ -7,6 +7,9 @@ const CardContainer = () => {
   const { handleGetItems } = useItem();
 
   const results = useSelector((state) => state.collection.items);
+  const itemLoading = useSelector((state) => state.collection.itemLoading);
+
+  console.log(itemLoading);
 
   useEffect(() => {
     async function getItem() {
@@ -21,7 +24,9 @@ const CardContainer = () => {
 
   return (
     <div className="p-10 flex gap-5 flex-wrap h-full w-full">
-      {results.length > 0 ? (
+      {itemLoading ? (
+        <div>Loading...</div>
+      ) : results.length > 0 ? (
         contents.map((content, idx) => {
           return (
             <Card

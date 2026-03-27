@@ -4,6 +4,7 @@ import {
   getItemById,
   updateItemById,
   deleteItemById,
+  getRelatedItemsController,
 } from "../services/items.api";
 import {
   setItemLoading,
@@ -12,6 +13,7 @@ import {
   addItem,
   addParticularItem,
   updateItem,
+  addRelatedItems,
 } from "../../slices/items.slice";
 import { useDispatch } from "react-redux";
 
@@ -127,11 +129,28 @@ export function useItem() {
     }
   }
 
+  async function handleRealtedItemsById(id) {
+    try {
+      setItemLoading(true);
+      const data = await getRelatedItemsController(id);
+      dispatch(addRelatedItems(data));
+    } catch (error) {
+      dispatch(
+        setItemError(
+          error.response?.data?.message || "Failed to fetch user data",
+        ),
+      );
+    } finally {
+      setItemLoading(false);
+    }
+  }
+
   return {
     handleGetItems,
     handleCreateItem,
     handleGetItemById,
     handleUpdateItemById,
     handleDeleteItemById,
+    handleRealtedItemsById,
   };
 }

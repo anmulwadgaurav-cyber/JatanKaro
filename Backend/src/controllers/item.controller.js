@@ -68,7 +68,7 @@ export async function createItemController(req, res) {
 
     const finalThumbnail = thumbnail || metadata?.image || DEFAULT_IMAGE;
 
-    const finalType = type || contentType || "article";
+    const finalType = contentType || type || "article";
 
     const finalTags = Array.isArray(tags)
       ? tags

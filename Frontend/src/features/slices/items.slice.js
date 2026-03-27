@@ -6,6 +6,7 @@ const itemSlice = createSlice({
   initialState: {
     items: [],
     selectedItem: null,
+    relatedItem: null,
     itemLoading: false,
     error: null,
   },
@@ -18,6 +19,9 @@ const itemSlice = createSlice({
     },
     addParticularItem: (state, action) => {
       state.selectedItem = action.payload;
+    },
+    addRelatedItems: (state, action) => {
+      state.relatedItem = action.payload;
     },
     updateItem: (state, action) => {
       const updatedItem = action.payload;
@@ -33,7 +37,7 @@ const itemSlice = createSlice({
       }
     },
     setItemLoading(state, action) {
-      state.itemLoading = true;
+      state.itemLoading = action.payload;
       state.error = null;
     },
     setItemError(state, action) {
@@ -49,6 +53,7 @@ export const {
   updateItem,
   setItemError,
   setItemLoading,
+  addRelatedItems,
   addParticularItem,
 } = itemSlice.actions;
 export default itemSlice.reducer;

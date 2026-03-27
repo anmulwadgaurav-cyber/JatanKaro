@@ -8,11 +8,16 @@ import { successMessageToast } from "../../slices/notification.slice";
 const DetailedCard = () => {
   const params = useParams();
   const itemId = params.id;
-  const { handleGetItemById, handleUpdateItemById, handleDeleteItemById } =
-    useItem();
+  const {
+    handleGetItemById,
+    handleUpdateItemById,
+    handleDeleteItemById,
+    handleRealtedItemsById,
+  } = useItem();
   const display = useSelector((state) => state.display.detailedDisplay);
   const dispatch = useDispatch();
   const data = useSelector((state) => state.collection.selectedItem);
+  const related = useSelector((state) => state.collection.relatedItem);
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -30,6 +35,12 @@ const DetailedCard = () => {
         description: data?.description || "",
         tags: data?.tags || [],
       });
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (data) {
+      handleRealtedItemsById(itemId);
     }
   }, [data]);
 
@@ -81,7 +92,7 @@ const DetailedCard = () => {
           : "hidden"
       }
     >
-      <div className="bg-card/95 w-350 h-140 text-text rounded-2xl border border-shade">
+      <div className="bg-card/95 w-350 h-190 text-text rounded-2xl border border-shade flex flex-col overflow-hidden">
         <div className="border-b border-shade px-10 py-5 flex justify-between items-center uppercase ">
           <div className="flex gap-5 items-center">
             <p className="text-secondary">{data?.type}</p>
@@ -112,18 +123,29 @@ const DetailedCard = () => {
           </button>
         </div>
         <div className="p-5  h-full flex">
-          <iframe
-            src={
-              data?.url.includes("youtube" || "youtu.be")
-                ? `https://www.youtube.com/embed/${videoId}`
-                : data?.url
-            }
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="w-170 h-110 aspect-video rounded-tl-xl rounded-bl-xl"
-          />
-          <div className="flex flex-col bg-background h-110 w-full rounded-tr-xl rounded-br-xl">
+          {data?.type === "image" ? (
+            <img
+              src={
+                data.thumbnail.includes("Image_not_available")
+                  ? data?.url
+                  : data.thumbnail
+              }
+              alt=""
+              className="h-100 rounded-tl-xl rounded-bl-xl w-170 object-cover"
+            />
+          ) : (
+            <iframe
+              src={
+                data?.url.includes("youtube" || "youtu.be")
+                  ? `https://www.youtube.com/embed/${videoId}`
+                  : data?.url
+              }
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-170 h-100 aspect-video rounded-tl-xl rounded-bl-xl"
+            />
+          )}
+          <div className="flex flex-col bg-background h-100 w-full rounded-tr-xl rounded-br-xl">
             <div className="border-b border-shade p-5 h-30 flex items-center">
               {isEditing ? (
                 <textarea
@@ -172,7 +194,7 @@ const DetailedCard = () => {
               ) : data?.tags && data.tags.length > 0 ? (
                 data.tags.map((tag) => {
                   return (
-                    <p className=" text-secondary px-5 py-2 rounded-full bg-card h-fit">
+                    <p className=" text-secondary px-5 py-2 rounded-full bg-card h-fit capitalize">
                       {tag}
                     </p>
                   );
@@ -226,6 +248,25 @@ const DetailedCard = () => {
               </div>
             )}
           </div>
+        </div>
+        <div className=" p-5 h-full border-t border-shade flex gap-5">
+          {related.map((item) => {
+            return (
+              <div>
+                <img
+                  className="w-55 h-35 object-cover rounded-xl"
+                  src={
+                    item.thumbnail.includes("Image_not_available") ? item.url : item.thumbnail
+                  }
+                  alt=""
+                />
+                <div className="w-50 text-[14px]">
+                  <p>{item.title.slice(0, 40) + "..."}</p>
+                  <p className="text-secondary text-sm">{date}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

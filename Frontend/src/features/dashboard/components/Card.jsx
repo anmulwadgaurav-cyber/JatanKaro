@@ -28,14 +28,14 @@ const Card = ({
           target="_blank"
           className="h-9 w-9 flex items-center justify-center rounded-full bg-text text-background hover:scale-110 transition-all ease-in-out duration-200"
         >
-          <i class="ri-arrow-right-up-line text-xl font-light"></i>
+          <i className="ri-arrow-right-up-line text-xl font-light"></i>
         </a>
         <a
           href={url}
           target="_blank"
           className="h-9 w-9 flex items-center justify-center rounded-full bg-text text-customRed hover:scale-110 transition-all ease-in-out duration-200"
         >
-          <i class="ri-heart-line text-xl font-light"></i>
+          <i className="ri-heart-line text-xl font-light"></i>
         </a>
       </div>
       <Link
@@ -43,7 +43,7 @@ const Card = ({
         to={`/card/detail/${id}`}
       >
         <img
-          src={thumbnail}
+          src={thumbnail.includes("Image_not_available") ? url : thumbnail}
           className="w-full rounded-tr-xl rounded-tl-xl h-50 bg-foreground/30 object-cover"
         />
         <div className="w-full h-60 p-5 text-[14px] font-medium bg-card flex flex-col gap-5 rounded-br-xl rounded-bl-xl">
@@ -67,7 +67,7 @@ const Card = ({
             </div>
           </div>
           <div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 capitalize">
               {Array.isArray(tags) && tags.length > 0 ? (
                 tags.map((tag, idx) => {
                   return (
