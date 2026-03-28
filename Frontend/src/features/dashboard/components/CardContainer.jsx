@@ -26,15 +26,15 @@ const CardContainer = () => {
     <div className="p-10 flex gap-5 flex-wrap h-full w-full">
       {itemLoading ? (
         <div>Loading...</div>
-      ) : results.length > 0 ? (
+      ) : results?.length > 0 ? (
         contents.map((content, idx) => {
           return (
             <Card
               keyId={idx}
               id={content._id}
               thumbnail={content.thumbnail}
-              date={content.createdAt.split("T")[0].replaceAll("-", "/")}
-              type={content.type.toUpperCase()}
+              date={content.createdAt?.split("T")[0].replaceAll("-", "/")}
+              type={content.type?.toUpperCase()}
               title={content.title}
               description={content.description}
               tags={content.tags}

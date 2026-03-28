@@ -147,7 +147,7 @@ const DetailedCard = () => {
               src={
                 data?.url.includes("youtube" || "youtu.be")
                   ? `https://www.youtube.com/embed/${videoId}`
-                  : data?.url
+                  : `https://docs.google.com/viewer?url=${data.url}&embedded=true`
               }
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -266,15 +266,21 @@ const DetailedCard = () => {
                 to={`/card/detail/${itemId}`}
                 className="hover:scale-102 transition-all ease-in-out duration-200"
               >
-                <img
-                  className="w-55 h-35 object-cover rounded-xl"
-                  src={
-                    item.thumbnail.includes("Image_not_available")
-                      ? item.url
-                      : item.thumbnail
-                  }
-                  alt=""
-                />
+                {item.type?.toLowerCase() === "article" ? (
+                  <img
+                    src="https://www.scriptorium.com/wp-content/uploads/2025/01/Blog-featured-images-3.png"
+                    className="w-55 h-35 object-cover rounded-xl"
+                  />
+                ) : (
+                  <img
+                    src={
+                      item.thumbnail.includes("Image_not_available")
+                        ? item.url
+                        : item.thumbnail
+                    }
+                    className="w-55 h-35 object-cover rounded-xl"
+                  />
+                )}
                 <div className="w-50 text-[14px]">
                   <p>{item.title.slice(0, 40) + "..."}</p>
                   <p className="text-secondary text-sm">

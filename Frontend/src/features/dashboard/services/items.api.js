@@ -24,14 +24,48 @@ export async function createItem({
   return response.data;
 }
 
-export async function getItems({ q, type, tag, page, limit } = {}) {
-  const response = await api.get("/get-items", {
-    params: { q, type, tag, page, limit },
-  });
-  const semanticRes = await api.get("/semantic-search", {
-    params: { q, type, tag, page, limit },
-  });
-  return { ...response.data, ...semanticRes.data.results };
+export async function getItems({ q = "", type, tag, page, limit } = {}) {
+  try {
+    const standardFetch = api.get("/get-items", {
+      params: { q, type, tag, page, limit },
+    });
+
+    let semanticFetch = Promise.resolve({ data: { results: [] } });
+    if (q && q.trim() !== "") {
+      semanticFetch = api.get("/semantic-search", {
+        params: { q, type, tag, page, limit },
+      });
+    }
+
+    const [standardRes, semanticRes] = await Promise.all([
+      standardFetch,
+      semanticFetch,
+    ]);
+
+    const standardItems = standardRes.data.items || standardRes.data || [];
+    const semanticItems = semanticRes.data.results || [];
+
+    const combinedItems = [...standardItems, ...semanticItems];
+
+    console.log(combinedItems);
+
+    // const uniqueItems = Array.from(
+    //   new Map(combinedItems.map((item) => [item]).values()),
+    // );
+
+    return combinedItems;
+  } catch (error) {
+    console.error("Failed to fetch items:", error);
+    throw error;
+  }
+
+  // const response = await api.get("/get-items", {
+  //   params: { q, type, tag, page, limit },
+  // });
+  // const semanticRes = await api.get("/semantic-search", {
+  //   params: { q, type, tag, page, limit },
+  // });
+  // return { ...response.data, ...semanticRes.data.results };
 }
 
 export async function getRelatedItemsController(id) {

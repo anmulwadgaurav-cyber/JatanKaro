@@ -42,10 +42,17 @@ const Card = ({
         onClick={() => dispatch(setDetailedDisplay(true))}
         to={`/card/detail/${id}`}
       >
-        <img
-          src={thumbnail.includes("Image_not_available") ? url : thumbnail}
-          className="w-full rounded-tr-xl rounded-tl-xl h-50 bg-foreground/30 object-cover"
-        />
+        {type?.toLowerCase() === "article" ? (
+          <img
+            src="https://www.scriptorium.com/wp-content/uploads/2025/01/Blog-featured-images-3.png"
+            className="w-full rounded-tr-xl rounded-tl-xl h-50 bg-foreground/30 object-cover"
+          />
+        ) : (
+          <img
+            src={thumbnail.includes("Image_not_available") ? url : thumbnail}
+            className="w-full rounded-tr-xl rounded-tl-xl h-50 bg-foreground/30 object-cover"
+          />
+        )}
         <div className="w-full h-60 p-5 text-[14px] font-medium bg-card flex flex-col gap-5 rounded-br-xl rounded-bl-xl">
           <div className="flex flex-col justify-between h-full">
             <div>

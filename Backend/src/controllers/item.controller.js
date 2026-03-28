@@ -3,10 +3,13 @@ import userModel from "../models/userModel.js";
 import { extractMetadata } from "../services/scraping.service.js";
 import mongoose from "mongoose";
 import { getEmbedding } from "../utils/embedding.js";
+import { generateTags } from "../utils/generateTags.js";
 
 export async function createItemController(req, res) {
+  console.log("Incoming data", req.body);
   const userId = req.user.id;
   const { url, title, description, thumbnail, type, tags } = req.body;
+
   try {
     const existingItem = await itemModel.findOne({ url, user: userId });
 
@@ -82,10 +85,22 @@ export async function createItemController(req, res) {
           Description: ${finalDescription}
           Type: ${finalType}
           Tags: ${finalTags.join(", ")}
-          `;
+          `.trim();
 
     //generate embedding
     const embedding = await getEmbedding(content);
+    //generate tags
+    let aiTags = [];
+    try {
+      aiTags = await generateTags(content);
+    } catch (error) {
+      console.error("Tag generation failed:", error.message);
+    }
+
+    //merged Tags
+    // const mergedTags = [...new Set([...finalTags, ...aiTags]).toLowerCase()].slice(0, 5); // Limit to 5 unique tags
+
+    // console.log("Merged Tags:", mergedTags);
 
     const itemData = await itemModel.create({
       user: userId,
@@ -95,7 +110,7 @@ export async function createItemController(req, res) {
       content,
       thumbnail: finalThumbnail,
       type: finalType,
-      tags: finalTags,
+      tags: [...finalTags, ...aiTags], // Use the merged tags
       embedding,
     });
 
@@ -116,6 +131,21 @@ export async function createItemController(req, res) {
 export async function semanticSearchController(req, res) {
   const { q } = req.query;
   const userId = req.user.id;
+
+  if (!q || q.trim() === "") {
+    return res.status(400).json({
+      success: false,
+      message: "Search query cannot be empty",
+    });
+  }
+
+  // 2. Prevent the BSONError Crash
+  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized or invalid user ID format",
+    });
+  }
 
   try {
     const enhancedQuery = `
@@ -165,6 +195,26 @@ export async function semanticSearchController(req, res) {
 export async function getRelatedItemsController(req, res) {
   const { itemId } = req.params;
   const userId = req.user.id;
+
+  // 1. Guard Clause: Validate the itemId from the URL parameter
+  if (
+    !itemId ||
+    itemId === "undefined" ||
+    !mongoose.Types.ObjectId.isValid(itemId)
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid or missing Item ID.",
+    });
+  }
+
+  // 2. Guard Clause: Validate the userId from the auth middleware
+  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized or invalid User ID format.",
+    });
+  }
 
   try {
     const item = await itemModel.findById(itemId);

@@ -53,7 +53,7 @@ export function useItem() {
     try {
       setItemLoading(true);
       const data = await getItems({ q, type, tag, page, limit });
-      dispatch(setItems(data.items));
+      dispatch(setItems(data));
     } catch (error) {
       dispatch(
         setItemError(
