@@ -26,14 +26,17 @@ export async function createItem({
 
 export async function getItems({ q = "", type, tag, page, limit } = {}) {
   try {
+    const hasQuery = q?.trim().length > 2;
+
     const standardFetch = api.get("/get-items", {
       params: { q, type, tag, page, limit },
     });
 
     let semanticFetch = Promise.resolve({ data: { results: [] } });
-    if (q && q.trim() !== "") {
+
+    if (hasQuery) {
       semanticFetch = api.get("/semantic-search", {
-        params: { q, type, tag, page, limit },
+        params: { q },
       });
     }
 
@@ -42,30 +45,22 @@ export async function getItems({ q = "", type, tag, page, limit } = {}) {
       semanticFetch,
     ]);
 
-    const standardItems = standardRes.data.items || standardRes.data || [];
+    const standardItems = standardRes.data.items || [];
     const semanticItems = semanticRes.data.results || [];
 
-    const combinedItems = [...standardItems, ...semanticItems];
+    // 🔥 semantic first
+    const combinedItems = [...semanticItems, ...standardItems];
 
-    console.log(combinedItems);
+    // ✅ remove duplicates
+    const uniqueItems = Array.from(
+      new Map(combinedItems.map((item) => [item._id, item])).values(),
+    );
 
-    // const uniqueItems = Array.from(
-    //   new Map(combinedItems.map((item) => [item]).values()),
-    // );
-
-    return combinedItems;
+    return uniqueItems;
   } catch (error) {
     console.error("Failed to fetch items:", error);
     throw error;
   }
-
-  // const response = await api.get("/get-items", {
-  //   params: { q, type, tag, page, limit },
-  // });
-  // const semanticRes = await api.get("/semantic-search", {
-  //   params: { q, type, tag, page, limit },
-  // });
-  // return { ...response.data, ...semanticRes.data.results };
 }
 
 export async function getRelatedItemsController(id) {

@@ -147,7 +147,7 @@ const DetailedCard = () => {
               src={
                 data?.url.includes("youtube" || "youtu.be")
                   ? `https://www.youtube.com/embed/${videoId}`
-                  : `https://docs.google.com/viewer?url=${data.url}&embedded=true`
+                  : `https://docs.google.com/viewer?url=${data?.url}&embedded=true`
               }
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
