@@ -37,7 +37,17 @@ app.use(express.static("./public")); // Serve static files from the public direc
 app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 
 // Serve SPA entry for client-side routing when building frontend into Backend/public
-app.get("*", (req, res) => {
+// NOTE: SPA fallback moved below API routes to avoid catching API requests.
+
+//Routes
+app.use("/api/auth", authRouter);
+app.use("/api/items", itemRouter);
+
+// Serve SPA entry for client-side routing when building frontend into Backend/public
+app.get("/*", (req, res) => {
+  // If the request is for an API route, skip the SPA fallback
+  if (req.path.startsWith("/api/"))
+    return res.status(404).json({ error: "Not Found" });
   try {
     const indexPath = path.resolve("./public/index.html");
     return res.sendFile(indexPath);
@@ -45,9 +55,5 @@ app.get("*", (req, res) => {
     return res.status(404).send("Not Found");
   }
 });
-
-//Routes
-app.use("/api/auth", authRouter);
-app.use("/api/items", itemRouter);
 
 export default app;
