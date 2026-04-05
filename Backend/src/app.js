@@ -43,17 +43,18 @@ app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 app.use("/api/auth", authRouter);
 app.use("/api/items", itemRouter);
 
-// Serve SPA entry for client-side routing when building frontend into Backend/public
-app.get("/*", (req, res) => {
-  // If the request is for an API route, skip the SPA fallback
-  if (req.path.startsWith("/api/"))
-    return res.status(404).json({ error: "Not Found" });
-  try {
-    const indexPath = path.resolve("./public/index.html");
-    return res.sendFile(indexPath);
-  } catch (err) {
-    return res.status(404).send("Not Found");
-  }
+// SPA fallback: serve `public/index.html` for non-API GET requests.
+// Use `app.use` middleware (no path pattern) to avoid path-to-regexp parsing issues
+// that can happen on some platforms with wildcard route strings.
+app.use((req, res, next) => {
+  if (req.method !== "GET") return next();
+  if (req.path.startsWith("/api/")) return next();
+  if (!req.accepts || !req.accepts("html")) return next();
+
+  const indexPath = path.resolve("./public/index.html");
+  res.sendFile(indexPath, (err) => {
+    if (err) return next();
+  });
 });
 
 export default app;
