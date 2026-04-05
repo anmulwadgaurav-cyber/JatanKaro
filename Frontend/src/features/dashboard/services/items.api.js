@@ -1,7 +1,10 @@
 import axios from "axios";
 
+// Use Vite environment variable for API base in production.
+// Set VITE_API_BASE to e.g. https://jatankaro.onrender.com when deploying.
+const BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 const api = axios.create({
-  baseURL: "https://jatankaro.onrender.com/api/items",
+  baseURL: `${BASE}/api/items`,
   withCredentials: true,
 });
 

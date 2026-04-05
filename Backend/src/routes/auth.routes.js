@@ -1,7 +1,5 @@
 import { Router } from "express";
 import {
-  deactivateAccountController,
-  forgotPasswordController,
   getMeController,
   loginController,
   logoutController,
@@ -9,6 +7,8 @@ import {
   resendEmailController,
   verifyEmailController,
   verifyPasswordController,
+  forgotPasswordController,
+  deactivateAccountController,
 } from "../controllers/auth.controller.js";
 import { registerValidator } from "../validators/register.validator.js";
 import { identifyUserMiddleware } from "../middlewares/auth.middleware.js";
