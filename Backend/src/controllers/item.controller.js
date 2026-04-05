@@ -452,3 +452,65 @@ export async function updateItemController(req, res) {
     });
   }
 }
+
+export async function getGraphController(req, res) {
+  const { itemId } = req.params;
+  const userId = req.user.id;
+
+  try {
+    const item = await itemModel.findById(itemId);
+    if (!item) {
+      return res.status(404).json({
+        message: "Item not found",
+        success: false,
+      });
+    }
+
+    //find related items using embeddings
+    const relatedItems = await itemModel.aggregate([
+      {
+        $vectorSearch: {
+          index: "vector_index",
+          path: "embedding",
+          queryVector: item.embedding,
+          numCandidates: 200,
+          limit: 5,
+          filter: {
+            user: new mongoose.Types.ObjectId(userId),
+          },
+        },
+      },
+      {
+        $match: {
+          _id: { $ne: item._id }, //exclude same item
+        },
+      },
+    ]);
+
+    const nodes = [
+      {
+        id: item._id.toString(),
+        label: item.title,
+      },
+      ...relatedItems.map((r) => ({
+        id: r._id.toString(),
+        label: r.title,
+      })),
+    ];
+
+    const edges = relatedItems.map((r) => ({
+      source: item._id.toString(),
+      target: r._id.toString(),
+    }));
+
+    res.status(200).json({
+      nodes,
+      edges,
+    });
+  } catch (error) {
+    console.error("Graph Error", error);
+    res.status(500).json({
+      message: "Graph generation failed",
+    });
+  }
+}

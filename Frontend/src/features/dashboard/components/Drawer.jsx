@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../auth/hook/useAuth";
 import { useDispatch, useSelector } from "react-redux";
 import { setDrawerDisplay } from "../../slices/display.slice";
+import { Link } from "react-router-dom";
 
 const Drawer = () => {
   const { handleLogout } = useAuth();
@@ -42,6 +43,12 @@ const Drawer = () => {
               <i className="ri-user-3-line text-xl text-secondary"></i>
               Account
             </button>
+            <Link
+            to={"/card/graph"}
+            className="flex gap-3 cursor-pointer md:py-2 md:px-3 rounded-full hover:bg-shade w-full items-center transition-all ease-in-out duration-200">
+              <i className="ri-pie-chart-line text-xl text-secondary"></i>
+              Knowledge Graph
+            </Link>
             <button className="flex gap-3 cursor-pointer md:py-2 md:px-3 rounded-full hover:bg-shade w-full items-center transition-all ease-in-out duration-200">
               <i className="ri-settings-line text-xl text-secondary"></i>
               Settings

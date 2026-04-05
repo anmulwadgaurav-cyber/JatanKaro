@@ -2,6 +2,7 @@ import Router from "express";
 import {
   createItemController,
   deleteItemController,
+  getGraphController,
   getItemByIdController,
   getItemsController,
   getRelatedItemsController,
@@ -41,7 +42,11 @@ itemRouter.get(
 @desc Get related items based on embedding similarity
 @access Private
 */
-itemRouter.get("/related/:itemId", identifyUserMiddleware, getRelatedItemsController);
+itemRouter.get(
+  "/related/:itemId",
+  identifyUserMiddleware,
+  getRelatedItemsController,
+);
 
 /*
 @route GET /api/items/get-items
@@ -78,5 +83,12 @@ itemRouter.patch(
   identifyUserMiddleware,
   updateItemController,
 );
+
+/*
+@route GET /api/items/graph/:itemId
+@desc Get a graph of related items based on embedding similarity
+@access Private
+*/
+itemRouter.get("/graph/:itemId", identifyUserMiddleware, getGraphController);
 
 export default itemRouter;

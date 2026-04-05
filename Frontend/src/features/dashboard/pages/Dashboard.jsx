@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 const Dashboard = () => {
   const params = useParams();
   const itemId = params.id;
+
   return (
     <main className="bg-background w-full h-full text-text">
       <DetailedCard itemId={itemId} />

@@ -11,6 +11,7 @@ import ResetPassword from "../features/auth/components/ResetPassword";
 import PasswordResetNotice from "../features/auth/components/PasswordResetNotice";
 import PasswordResetLinkNotice from "../features/auth/components/PasswordResetLinkNotice";
 import DetailedCard from "../features/dashboard/components/DetailedCard";
+import KnowledgeGraph from "../features/dashboard/components/KnowledgeGraph";
 
 const AppRoutes = () => {
   return (
@@ -40,6 +41,7 @@ const AppRoutes = () => {
           element={<PasswordResetLinkNotice />}
         />
         <Route path="/card/detail/:id" element={<Dashboard />} />
+        <Route path="/card/graph" element={<KnowledgeGraph />} />
       </Routes>
     </div>
   );
