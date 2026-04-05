@@ -82,7 +82,7 @@ export async function verifyEmailController(req, res) {
     const html = `
       <h1>Email Verified Successfully</h1>
       <p>Your email has been verified successfully. You can now log in to your account.</p>
-      <a href="http://localhost:5173/login">Go to Login</a>
+      <a href="https://jatankaro.onrender.com/login">Go to Login</a>
     `;
 
     return res.status(200).send(html);
@@ -128,7 +128,7 @@ export async function resendEmailController(req, res) {
             <p>Hi ${user.username},</p>
             <p>Thank you for registering at <strong> JatanKaro! </strong> We're excited to have you on board. If you have any questions or need assistance, feel free to reach out to our support team.</p>
             <p>Please verify your email address by clicking the link below:</p>
-            <a href="http://localhost:5173/verify-email?token=${emailVerificationToken}">Verify Email</a>
+            <a href="https://jatankaro.onrender.com/verify-email?token=${emailVerificationToken}">Verify Email</a>
             <p>Note: This link will expire in 1 hour</p>
             <p>If you did not create an account, please ignore this email.</p>
             <p>Best regards,<br>The JatanKaro Team</p>
@@ -260,7 +260,7 @@ export async function forgotPasswordController(req, res) {
       html: `
             <p>Hi ${user.username},</p>
             <p>We received a request to reset your password for your JatanKaro account. If you made this request, please click the link below to reset your password:</p>
-            <a href="http://localhost:5173/reset-password?token=${resetPasswordVerificationToken}">Reset Password</a>
+            <a href="https://jatankaro.onrender.com/reset-password?token=${resetPasswordVerificationToken}">Reset Password</a>
             <p>Note: This link will expire in 1 hour</p>
             <p>If you did not request a password reset, please ignore this email. Your password will remain unchanged.</p>
             <p>Best regards,<br>The JatanKaro Team</p>
