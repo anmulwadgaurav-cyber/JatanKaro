@@ -51,6 +51,12 @@ app.use((req, res, next) => {
   if (req.path.startsWith("/api/")) return next();
   if (!req.accepts || !req.accepts("html")) return next();
 
+  // If the request looks like a static asset (has a file extension),
+  // skip the SPA fallback so static middleware can serve it or return 404.
+  // This prevents returning index.html with text/html for asset requests
+  // which breaks MIME-type checks in browsers.
+  if (req.path.match(/\.[a-zA-Z0-9]+$/)) return next();
+
   const indexPath = path.resolve("./public/index.html");
   res.sendFile(indexPath, (err) => {
     if (err) return next();
